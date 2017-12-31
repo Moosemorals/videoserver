@@ -47,10 +47,12 @@ public class VideoHandler implements HttpRequestHandler, Runnable {
             log.debug("Starting process");
             Process ffmpeg = new ProcessBuilder(
                     "C:\\Users\\Osric\\Desktop\\ffmpeg-20171229-0c78b6a-win64-static\\bin\\ffmpeg.exe",
-                    "-i", "C:\\Users\\Osric\\Desktop\\tg.mpg",
-                    "-c:v", "libvpx-vp9",
-                    "-crf", "31",
-                    "-b:v", "0",
+                    // "-i", "C:\\Users\\Osric\\Desktop\\tg.mpg",
+                    "-i", "\\\\PTAH\\big-media\\Video\\Doctor Who\\Doctor Who (2005)\\12th Doctor\\Doctor Who - 10x05 - Oxygen.ts",
+                    "-c:v", "libvpx",
+                    "-crf", "40",
+                    "-b:v", "8M",
+                    "-cpu-used", "15",
                     "-deadline", "realtime",
                     "-listen", "1",
                     "-f", "webm",
@@ -62,7 +64,7 @@ public class VideoHandler implements HttpRequestHandler, Runnable {
 
                     String line;
                     while ((line = err.readLine()) != null) {
-                        log.error("FFMPEG: {}", line);
+                        log.debug("FFMPEG: {}", line);
                     }
                 } catch (IOException ex) {
                     log.error("Problem reading error stream", ex);
@@ -75,6 +77,7 @@ public class VideoHandler implements HttpRequestHandler, Runnable {
                     lock.notifyAll();
                 }
                 ffmpeg.waitFor();
+                log.debug("Transcode finished");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
